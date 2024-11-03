@@ -1,5 +1,8 @@
 {
-    "usuario":{
-        
+    "usuarios":{
+        "id":1,
+        "usuario":"admin",
+        "password":"admin",
+        "email":"email@gmail.com"
     }
 }

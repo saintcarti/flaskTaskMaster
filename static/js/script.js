@@ -7,7 +7,7 @@ function login() {
     const usuario = document.getElementById('usuario').value;
     const password = document.getElementById('password').value;
 
-    fetch('http://localhost:5000/login', { // Cambia al endpoint correcto
+    fetch('http://localhost:3000/usuario', { // Cambia al endpoint correcto
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -35,7 +35,7 @@ function register() {
     const usuario = document.getElementById('usuario').value;
     const password = document.getElementById('password').value;
 
-    fetch('http://localhost:5000/registro', { // Cambia al endpoint correcto
+    fetch('http://localhost:3000/usuario', { // Cambia al endpoint correcto
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
