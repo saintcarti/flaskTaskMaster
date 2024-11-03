@@ -1,8 +1,24 @@
-from flask import Flask, render_template, request, jsonify, redirect, url_for,flash
+from flask import Flask, render_template, request, jsonify, redirect, url_for,flash,session
 import requests
+from functools import wraps
 
 app = Flask(__name__)
 app.secret_key = 'una_clave_secreta_muy_dificil_de_adivinar'
+
+
+def loginrequired(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if 'usuario' not in session:
+            flash('Inicia sesión para acceder a la página solicitada.', 'warning')
+            return redirect(url_for('login'))
+        return f(*args, **kwargs)
+    return decorated_function
+
+
+@app.route('/')
+def home():
+    return render_template('login.html')
 
 @app.route('/index')
 def index():
@@ -10,7 +26,7 @@ def index():
     return render_template('index.html')
 
 
-@app.route('/', methods=[ 'POST'])
+@app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
         usuario = request.form['usuario']
@@ -19,13 +35,19 @@ def login():
         # Hacer una solicitud GET a json-server
         response = requests.get(f'http://localhost:3000/usuarios?usuario={usuario}&password={password}')
 
-        if response.json():
-            flash('Inicio de sesión exitoso!')
-            return redirect(url_for('/dashboard'))
+        if response.ok:
+            usuarios = response.json()
+            if usuarios:  # Si hay al menos un usuario encontrado
+                session['usuario'] = usuario  # Almacena el usuario en la sesión
+                flash('Inicio de sesión exitoso!')
+                return redirect(url_for('dashboard'))
+            else:
+                flash('Usuario o contraseña incorrectos.')
         else:
-            flash('Usuario o contraseña incorrectos.')
+            flash('Error en la conexión con el servidor.')
 
-    return render_template('index.html')
+    return render_template('login.html')
+
 
 
 
@@ -46,9 +68,19 @@ def registro():
 
     return render_template('registro.html')
 
+@loginrequired
 @app.route('/dashboard')
 def dashboard():
+
     return render_template('dashboard.html')
+
+
+
+@app.route('/logout')
+def logout():
+    session.pop('usuario', None)  # Elimina el usuario de la sesión
+    flash('Has cerrado sesión exitosamente.')
+    return redirect(url_for('login'))
 
 
 
