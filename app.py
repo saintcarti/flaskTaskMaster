@@ -37,7 +37,7 @@ def login():
 
         if response.ok:
             usuarios = response.json()
-            if usuarios:  # Si hay al menos un usuario encontrado
+            if usuarios ==usuario:  # Si hay al menos un usuario encontrado
                 session['usuario'] = usuario  # Almacena el usuario en la sesión
                 flash('Inicio de sesión exitoso!')
                 return redirect(url_for('dashboard'))
