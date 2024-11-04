@@ -6,3 +6,24 @@ body {
     padding: 50px;
     background-image: url('../img/imagen.jpg');
 }
+
+
+
+body {
+    background-color: #e9ecef;
+}
+
+.card {
+    transition: transform 0.2s;
+}
+
+.card:hover {
+    transform: scale(1.02);
+}
+
+.form-control:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+
